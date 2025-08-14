@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1031606273563",
+    "firebase_url": "https://learnflutter-731df-default-rtdb.firebaseio.com",
+    "project_id": "learnflutter-731df",
+    "storage_bucket": "learnflutter-731df.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031606273563:android:a6d8c00c2541e40f831abe",
+        "android_client_info": {
+          "package_name": "com.example.learn_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-psSLVuea8W4IVZtj_ucp6YOHrel0IEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
