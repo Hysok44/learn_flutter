@@ -1,16 +1,18 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/service/realtime_service.dart';
 
 class RealtimePage extends StatelessWidget {
-  const RealtimePage({super.key});
+  RealtimePage({super.key});
+
+  final RealtimeService _realtimeService = RealtimeService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text("Learning RealtimeDatabase"),
-        ),
-
+        centerTitle: true,
+        title: Text("Learning RealtimeDatabase"),
         backgroundColor: Colors.grey,
       ),
       body: Center(
@@ -26,7 +28,7 @@ class RealtimePage extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsetsGeometry.only(left: 200,right: 200,top: 50),
+                padding: const EdgeInsets.only(left: 200,right: 200,top: 50),
                 child: Row(
                   children: [
                     Expanded(
@@ -37,11 +39,16 @@ class RealtimePage extends StatelessWidget {
                       ),
                     ),
 
-                     IconButton(
-                      onPressed: () {
-                        
+                    IconButton(
+                      onPressed: () async {
+                        try {
+                          await _realtimeService.saveData();
+                          print("✅ 保存成功");
+                        } catch (e) {
+                          print("❌ 保存失敗: $e");
+                        }
                       },
-                      icon: const Icon(Icons.send),
+                      icon: const Icon(Icons.save_alt),
                     ),
                   ],
                 ),
