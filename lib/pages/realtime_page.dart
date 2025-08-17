@@ -11,8 +11,7 @@ class _RealtimePageState extends State<RealtimePage>{
   final streamRef = FirebaseDatabase.instance.ref('test_realtime');
 
   String textData = "";
-  List<String> dataList = [];
-
+  List<String> dataList = []; // 前のデータをクリアして全体を更新する場合
 
   //表示されたときにまずここ
   @override
@@ -35,7 +34,6 @@ class _RealtimePageState extends State<RealtimePage>{
       final data = event.snapshot.value;
 
       setState(() {
-        dataList = []; // 前のデータをクリアして全体を更新する場合
         if (data != null) {
           final mapData = Map<String, dynamic>.from(data as Map);
           dataList = mapData.entries.map((e) {
