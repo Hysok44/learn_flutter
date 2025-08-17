@@ -10,8 +10,9 @@ class RealtimePage extends StatefulWidget {
 class _RealtimePageState extends State<RealtimePage>{
   final streamRef = FirebaseDatabase.instance.ref('test_realtime');
 
+  int textNum = 0;
   String textData = "";
-  List<String> dataList = []; // 前のデータをクリアして全体を更新する場合
+  List<Map<String, String?>> dataList = [];
 
   //表示されたときにまずここ
   @override
@@ -23,34 +24,69 @@ class _RealtimePageState extends State<RealtimePage>{
 
   //saveData
   Future<void> saveData(textData) async {
-    await streamRef.child('text_data').set({
-      'textData': textData,
+    DatabaseReference newRef = streamRef.push();
+    await newRef.set({'textData': textData});
+
+    setState(() {
+      dataList.add({
+        'key': newRef.key!,
+        'text': textData,
+      });
     });
   }
 
   //getData
   Future<void> getData() async {
-    streamRef.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
+    try {
+      // Firebase から一度だけデータを取得
+      DatabaseEvent event = await streamRef.once();
+      DataSnapshot snapshot = event.snapshot;
 
+      List<Map<String, String?>> tempList = [];
+
+      // children をループして key と textData を取り出す
+      for (var child in snapshot.children) {
+        tempList.add({
+          'key': child.key,
+          'text': child.child('textData').value.toString(),
+        });
+      }
+
+      // ローカルの dataList を更新して UI を再描画
       setState(() {
-        if (data != null) {
-          final mapData = Map<String, dynamic>.from(data as Map);
-          dataList = mapData.entries.map((e) {
-            final item = e.value;
-            if (item is Map && item["textData"] != null) {
-              return item["textData"].toString();
-            } else {
-              return item.toString();
-            }
-          }).toList();
-        }
+        dataList = tempList;
       });
 
-      print(dataList);
-    });
+      print("✅ データ取得成功: $dataList");
+    } catch (e) {
+      print("❌ データ取得失敗: $e");
+    }
   }
-  
+
+  //deleteData
+  Future<void> deleteData(int index) async {
+  if (index < 0 || index >= dataList.length) {
+    print("⚠️ index が範囲外です");
+    return;
+  }
+
+  try {
+    String? key = dataList[index]['key'];
+    if (key != null) {
+      await streamRef.child(key).remove(); // Firebase から削除
+      setState(() {
+        dataList.removeAt(index); // ローカルリストも削除
+      });
+      print("✅ 削除成功: $key");
+    } else {
+      print("⚠️ key が null です");
+    }
+  } catch (e) {
+    print("❌ 削除失敗: $e");
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,17 +100,21 @@ class _RealtimePageState extends State<RealtimePage>{
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
+              
               //show Data
               Container(
                 height: 400, width: 400,
-                color: Colors.grey,
 
                 child: ListView.builder(
                   itemCount: dataList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Center(child: Text(dataList[index])),
+                      title: Center(
+                        child: Text(dataList[index]['text'] ?? ''),
+                      ),
+                      onTap: (){
+                        deleteData(index);
+                      }
                     );
                   },
                 ),
