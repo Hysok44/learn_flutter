@@ -24,7 +24,7 @@ class _RealtimePageState extends State<RealtimePage>{
 
   //saveData
   Future<void> saveData(textData) async {
-    DatabaseReference newRef = streamRef.push();
+    DatabaseReference newRef = streamRef.push();// pushでrandomなkey生成
     await newRef.set({'textData': textData});
 
     setState(() {
@@ -96,61 +96,62 @@ class _RealtimePageState extends State<RealtimePage>{
         backgroundColor: Colors.grey,
       ),
       body: Center(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              
-              //show Data
-              Container(
-                height: 400, width: 400,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            
+            //show Data
+            Container(
+              height: 400, width: 400,
 
-                child: ListView.builder(
-                  itemCount: dataList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Center(
-                        child: Text(dataList[index]['text'] ?? ''),
-                      ),
-                      onTap: (){
-                        deleteData(index);
-                      }
-                    );
-                  },
-                ),
-              ),
-              
-              Padding(
-                padding: const EdgeInsets.only(left: 200,right: 200,top: 50),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Type here",
-                        ),
-                        onChanged: (value){
-                          textData = value;
-                        },
-                      ),
+              //表示
+              child: ListView.builder(
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Center(
+                      child: Text(dataList[index]['text'] ?? ''),
                     ),
+                    onTap: (){
+                      deleteData(index);
+                    }
+                  );
+                },
+              ),
+            ),
+            
 
-                    IconButton(
-                      onPressed: () async {
-                        try {
-                          await saveData(textData);
-                          print("✅ 保存成功");
-                        } catch (e) {
-                          print("❌ 保存失敗: $e");
-                        }
+            //入力欄
+            Padding(
+              padding: const EdgeInsets.only(left: 200,right: 200,top: 50),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Type here",
+                      ),
+                      onChanged: (value){
+                        textData = value;
                       },
-                      icon: const Icon(Icons.save_alt),
                     ),
-                  ],
-                ),
+                  ),
+
+                  IconButton(
+                    onPressed: () async {
+                      try {
+                        await saveData(textData);
+                        print("✅ 保存成功");
+                      } catch (e) {
+                        print("❌ 保存失敗: $e");
+                      }
+                    },
+                    icon: const Icon(Icons.save_alt),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:learn_flutter/firebase_options.dart';
 import 'package:learn_flutter/pages/first_gate.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

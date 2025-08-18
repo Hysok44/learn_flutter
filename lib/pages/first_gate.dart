@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/pages/firestore_page.dart';
 import 'package:learn_flutter/pages/realtime_page.dart';
 
 class FirstGate extends StatelessWidget {
@@ -55,7 +56,12 @@ class FirstGate extends StatelessWidget {
 
                 tileColor: Colors.blue[50],
 
-                onTap: () {}
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FirestorePage()),
+                  );
+                }
               ),
             ),
 
