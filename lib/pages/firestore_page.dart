@@ -10,23 +10,70 @@ class FirestorePage extends StatefulWidget {
 
 class _FirestorePageState extends State<FirestorePage> {
   String fireData = "";
+  List<Map<String, String?>> dataList = [];
 
+  //まずここが呼ばれる
+  @override
+  void initState() {
+    super.initState();
+
+    getData();
+  }
+
+  //saveData
   Future<void> saveData(fireData) async {
-  try {
-    var docRef = await FirebaseFirestore.instance
-        .collection('users')
+    try {
+      var ref = await FirebaseFirestore.instance
+        .collection('test_firestore')
+        .doc("uid") //これ追加しないと勝手に生成　"oLjA8d6Kf8XW..."
+        .collection("fireData")
+        // .set({ //もし↑するならセット
         .add({
-          'name': 'Taro',
-          'age': 25,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      // 保存直後に読み出してみる
-      var snapshot = await docRef.get();
-      print("保存されたデータ: ${snapshot.data()}");
+          'realData': fireData,
+      });
+      
+      //保存後取得し反映
+      await getData();
     } catch (e) {
       print("保存失敗: $e");
     }
   }
+
+  //getData
+  Future<void> getData() async {
+    var snapshot = await FirebaseFirestore.instance
+      .collection('test_firestore')
+      .doc("uid")
+      .collection("fireData")
+      .get();
+
+    //一回リストをリセットしてからデータ追加する
+    //データの順番はバラバラ　docがランダムに生成されるため "oLjA8d6Kf8XW..."
+    setState(() {
+      dataList.clear();
+      for (var doc in snapshot.docs) {
+        dataList.add({
+          'key': doc.id,
+          'realData': doc['realData'],
+        });
+      }
+    });
+  }
+
+  //delete
+  Future<void> deleteData(index) async {
+
+    String? key = dataList[index]['key'];
+    await FirebaseFirestore.instance
+      .collection('test_firestore')
+      .doc("uid")
+      .collection("fireData")
+      .doc(key)
+      .delete();
+
+    await getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +84,26 @@ class _FirestorePageState extends State<FirestorePage> {
       ),
       body: Center(
         child: Column(
-          children: [            
+          children: [
+            Container(
+              height: 400, width: 400,
+
+              //表示
+              child: ListView.builder(
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Center(
+                      child: Text(dataList[index]['realData'] ?? ''),
+                    ),
+                    onTap: (){
+                      deleteData(index);
+                    },
+                  );
+                },
+              ),
+            ),          
+
             Padding(
               padding: const EdgeInsets.only(left: 200,right: 200,top: 50),
               child: Row(

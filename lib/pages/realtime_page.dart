@@ -42,19 +42,14 @@ class _RealtimePageState extends State<RealtimePage>{
       DatabaseEvent event = await streamRef.once();
       DataSnapshot snapshot = event.snapshot;
 
-      List<Map<String, String?>> tempList = [];
-
-      // children をループして key と textData を取り出す
-      for (var child in snapshot.children) {
-        tempList.add({
-          'key': child.key,
-          'text': child.child('textData').value.toString(),
-        });
-      }
-
-      // ローカルの dataList を更新して UI を再描画
       setState(() {
-        dataList = tempList;
+        // children をループして key と textData を取り出す
+        for (var child in snapshot.children) {
+          dataList.add({
+            'key': child.key,
+            'text': child.child('textData').value.toString(),
+          });
+        }
       });
 
       print("✅ データ取得成功: $dataList");
@@ -65,26 +60,21 @@ class _RealtimePageState extends State<RealtimePage>{
 
   //deleteData
   Future<void> deleteData(int index) async {
-  if (index < 0 || index >= dataList.length) {
-    print("⚠️ index が範囲外です");
-    return;
-  }
+    if (index < 0 || index >= dataList.length) {
+      print("⚠️ index が範囲外です");
+      return;
+    }
 
-  try {
     String? key = dataList[index]['key'];
     if (key != null) {
       await streamRef.child(key).remove(); // Firebase から削除
       setState(() {
         dataList.removeAt(index); // ローカルリストも削除
       });
-      print("✅ 削除成功: $key");
     } else {
       print("⚠️ key が null です");
     }
-  } catch (e) {
-    print("❌ 削除失敗: $e");
   }
-}
 
 
   @override
