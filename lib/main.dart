@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/firebase_options.dart';
+import 'package:learn_flutter/pages/Auth/login_page.dart';
 import 'package:learn_flutter/pages/first_gate.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FirstGate(),
+      home: LoginPage(), //今だけめんどくさいから FirstGateからLoginPageに
     );
   }
 }

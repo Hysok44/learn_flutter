@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/pages/Auth/login_page.dart';
 import 'package:learn_flutter/pages/firestore_page.dart';
 import 'package:learn_flutter/pages/realtime_page.dart';
 
@@ -21,6 +22,8 @@ class FirstGate extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            //realtime database
             Padding(
               padding: EdgeInsetsGeometry.only(left: 300,right: 300),
               child: ListTile(
@@ -44,6 +47,7 @@ class FirstGate extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            //firestore
             Padding(
               padding: EdgeInsetsGeometry.only(left: 300,right: 300),
               child: ListTile(
@@ -67,6 +71,7 @@ class FirstGate extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            //authentication
             Padding(
               padding: EdgeInsetsGeometry.only(left: 300,right: 300),
               child: ListTile(
@@ -78,12 +83,18 @@ class FirstGate extends StatelessWidget {
                 ),
                 tileColor: Colors.blue[50],
 
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
               ),
             ),
 
             const SizedBox(height: 15),
 
+            //storage
             Padding(
               padding: EdgeInsetsGeometry.only(left: 300,right: 300),
               child: ListTile(
@@ -101,6 +112,7 @@ class FirstGate extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            //google admob
             Padding(
               padding: EdgeInsetsGeometry.only(left: 300,right: 300),
               child: ListTile(
