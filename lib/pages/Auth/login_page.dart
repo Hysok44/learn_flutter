@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/Auth/register_page.dart';
 
@@ -8,9 +9,18 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-void login(){
-
-
+void login(emailText, passText) async {
+  try {
+    final User? user = (await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: emailText, password: passText))
+            .user;
+    if (user != null) {
+      print("Login successful: ${user.email}, UID: ${user.uid}");
+    }
+  } catch (e) {
+    print(e);
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -103,9 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                 shape: const StadiumBorder(),
               ),
               onPressed: () {
-                print(emailText.text);
-
-                login();
+                login(emailText.text, passText.text);
               },
             ),
           ],
