@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/Auth/register_page.dart';
+import 'package:learn_flutter/pages/first_gate.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +17,7 @@ void login(emailText, passText) async {
                 email: emailText, password: passText))
             .user;
     if (user != null) {
-      print("Login successful: ${user.email}, UID: ${user.uid}");
+      //Login成功した後に画面遷移したい
     }
   } catch (e) {
     print(e);
