@@ -23,7 +23,7 @@ class _FirestorePageState extends State<FirestorePage> {
   //saveData
   Future<void> saveData(fireData) async {
     try {
-      var ref = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
         .collection('test_firestore')
         .doc("uid") //これ追加しないと勝手に生成　"oLjA8d6Kf8XW..."
         .collection("fireData")

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/Auth/login_page.dart';
+import 'package:learn_flutter/pages/Auth/show_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,14 +10,20 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-void register(emailText,passText) async {
+//新規登録
+void register(context, emailText, passText) async {
   try {
     final User? user = (await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: emailText, password: passText))
-        .user;
-    if (user != null)
-      print("ユーザ登録しました ${user.email} , ${user.uid}");
+      .createUserWithEmailAndPassword(
+          email: emailText, password: passText))
+      .user;
+
+    if (user != null){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ShowPage()),
+      );
+    }
   } catch (e) {
     print(e);
   }
@@ -139,9 +146,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               onPressed: () {
                 if (passText.text == comfirmText.text){ 
-                  register(emailText.text, passText.text);
-                }else{
-                  Text("diff pass");
+                  register(context, emailText.text, passText.text);
+                }else {
+                  //下にToast表示的な感じでお知らせ
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Passwords do not match")),
+                  );
                 }
               },
             ),

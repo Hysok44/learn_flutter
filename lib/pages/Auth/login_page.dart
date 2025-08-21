@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/Auth/register_page.dart';
-import 'package:learn_flutter/pages/first_gate.dart';
+import 'package:learn_flutter/pages/Auth/show_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,7 +10,8 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-void login(emailText, passText) async {
+//ログイン
+void login(context, emailText, passText) async {
   try {
     final User? user = (await FirebaseAuth.instance
             .signInWithEmailAndPassword(
@@ -18,6 +19,10 @@ void login(emailText, passText) async {
             .user;
     if (user != null) {
       //Login成功した後に画面遷移したい
+       Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ShowPage()),
+      );
     }
   } catch (e) {
     print(e);
@@ -114,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                 shape: const StadiumBorder(),
               ),
               onPressed: () {
-                login(emailText.text, passText.text);
+                login(context, emailText.text, passText.text);
               },
             ),
           ],
