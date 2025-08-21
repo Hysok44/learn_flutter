@@ -14,7 +14,12 @@ void login(){
 }
 
 class _LoginPageState extends State<LoginPage> {
+  //password隠すための
   bool _obscurePass = true;
+
+  //textField data
+  TextEditingController emailText = TextEditingController();
+  TextEditingController passText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: EdgeInsets.only(right: 300, left: 300),
               child: TextField(
+                controller: emailText,
                 decoration: InputDecoration(
                   hintText: "email",
                 ),
@@ -51,6 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: EdgeInsets.only(right: 300, left: 300),
               child: TextField(
+                controller: passText,
                 obscureText: _obscurePass,
                 decoration: InputDecoration(
                   hintText: "password",
@@ -96,6 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                 shape: const StadiumBorder(),
               ),
               onPressed: () {
+                print(emailText.text);
+
                 login();
               },
             ),

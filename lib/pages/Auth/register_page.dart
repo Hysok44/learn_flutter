@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/Auth/login_page.dart';
 
@@ -8,13 +9,28 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-void register(){
-  
+void register(emailText,passText) async {
+  try {
+    final User? user = (await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailText, password: passText))
+        .user;
+    if (user != null)
+      print("ユーザ登録しました ${user.email} , ${user.uid}");
+  } catch (e) {
+    print(e);
+  }
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  //password隠すための
   bool _obscurePass = true;
   bool _obscureConfirm = true;
+
+  //textField data
+  TextEditingController emailText = TextEditingController();
+  TextEditingController passText = TextEditingController();
+  TextEditingController comfirmText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Padding(
               padding: EdgeInsets.only(right: 300, left: 300),
               child: TextField(
+                controller: emailText,
                 decoration: InputDecoration(
                   hintText: "email",
                 ),
@@ -51,6 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Padding(
               padding: EdgeInsets.only(right: 300, left: 300),
               child: TextField(
+                controller: passText,
                 obscureText: _obscurePass,
                 decoration: InputDecoration(
                   hintText: "password",
@@ -74,6 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Padding(
               padding: EdgeInsets.only(right: 300, left: 300),
               child: TextField(
+                controller: comfirmText,
                 obscureText: _obscureConfirm,
                 decoration: InputDecoration(
                   hintText: "confirm password",
@@ -119,7 +138,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 shape: const StadiumBorder(),
               ),
               onPressed: () {
-                register();
+                if (passText.text == comfirmText.text){ 
+                  register(emailText.text, passText.text);
+                }else{
+                  Text("diff pass");
+                }
               },
             ),
           ],
